@@ -1,3 +1,13 @@
+# GitHub Change Log
+- **Date:** 2025-11-27  
+- **Changes:**  
+  - Added `evidence_mode` variable to enable "strict" evidence mode.  
+  - Updated hallucination prevention logic to enforce strict evidence mode: only include claims, equations, and results present in source text.  
+  - Added explicit messages when source text is insufficient: “The source text does not provide enough detail to summarize this section in strict evidence mode.”  
+  - Standardized warning messages for missing or very short sections:  
+    - “Section skipped: no usable text was provided.”  
+    - “Section very short: summary may be incomplete.”  
+
 # Module Purpose
 **Goal:** Enforce safety and integrity by handling missing/empty sections, warning on short content, preventing hallucinations, managing context windows, and verifying citations.
 
@@ -7,6 +17,7 @@
 - Per-section outputs  
 - Chunking plan  
 - Extracted citations  
+- **Evidence mode** (`evidence_mode`) – optional, e.g., `"strict"`
 
 ## Outputs
 - Checks & Warnings report  
@@ -17,14 +28,20 @@
 
 ## 1. Missing/Empty Section Handler
 - **Action:** Replace summary with *“Section not found in source”*.  
+- **Warning message:** “Section skipped: no usable text was provided.”  
 - Add entry to global warnings list.
 
 ## 2. Short Section Warning
 - **Threshold:** <50 words.  
+- **Warning message:** “Section very short: summary may be incomplete.”  
 - Append a section-level warning and record in global report.
 
-## 3. Hallucination Prevention
+## 3. Hallucination Prevention / Strict Evidence Mode
 - **Rule:** Disallow any content not present in the source text.  
+- **Strict Evidence Mode (`evidence_mode = "strict"`):**  
+  - Only include claims, equations, and results that appear in the provided text.  
+  - If insufficient information is found, explicitly state:  
+    *“The source text does not provide enough detail to summarize this section in strict evidence mode.”*  
 - **Scan:** Compare each summary’s claims against its corresponding text span.  
 - Reject external or speculative facts.
 
@@ -39,4 +56,5 @@
 # Error Handling Procedures
 - **Verification failure:** Mark section as unverifiable and add warning.  
 - **Chunking overflow:** Reduce chunk size; prioritize section boundaries.  
-- **Ambiguous content:** Label as ambiguous and avoid speculative interpretation.
+- **Ambiguous content:** Label as ambiguous and avoid speculative interpretation.  
+- **Strict Evidence Mode gaps:** Output explicit message if section cannot be summarized due to lack of evidence.
