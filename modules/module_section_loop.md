@@ -1,3 +1,12 @@
+# GitHub Change Log
+- **Date:** 2025-11-27   
+- **Changes:**  
+  - Added `summary_level` variable to support "short" and "detailed" summaries.  
+  - Updated step-by-step section loop logic to include conditional summary generation based on `summary_level`.  
+  - "Short" mode: 1–2 sentence summary per section.  
+  - "Detailed" mode: paragraph summary + bullet list of 3–5 key points.  
+  - Maintained existing extraction, validation, mini-glossary creation, formatting, and status flag logic.  
+
 # Module Purpose
 **Goal:** For each requested section, extract content, validate presence/length, generate audience-appropriate summaries within limits, and produce per-section glossaries.
 
@@ -6,6 +15,7 @@
 - Normalized section map  
 - Preferences object  
 - Chunking plan  
+- **Summary level** (`summary_level`) – `"short"` or `"detailed"`  
 
 ## Outputs
 - Per-section summaries (expert and lay variants)  
@@ -24,6 +34,12 @@
 ### Validation
 - Verify section presence.  
 - Check word count.
+
+### Summary Level Conditional
+- **If `summary_level = "short"`:**  
+  - Generate a compact 1–2 sentence summary per section.
+- **If `summary_level = "detailed"`:**  
+  - Generate a short paragraph summary **plus** a bullet list of 3–5 key points per section.
 
 ## 2. Summary Generation
 
