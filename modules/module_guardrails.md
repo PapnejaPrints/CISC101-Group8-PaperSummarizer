@@ -1,9 +1,7 @@
 # GitHub Change Log
-- **Date:** 2025-11-27  
+- **Date:** 2025-11-28  
 - **Changes:**  
   - Added `evidence_mode` variable to enable "strict" evidence mode.  
-  - Updated hallucination prevention logic to enforce strict evidence mode: only include claims, equations, and results present in source text.  
-  - Added explicit messages when source text is insufficient: “The source text does not provide enough detail to summarize this section in strict evidence mode.”  
   - Standardized warning messages for missing or very short sections:  
     - “Section skipped: no usable text was provided.”  
     - “Section very short: summary may be incomplete.”  
@@ -35,6 +33,8 @@
 - **Threshold:** <50 words.  
 - **Warning message:** “Section very short: summary may be incomplete.”  
 - Append a section-level warning and record in global report.
+- If section is missing, empty or has less than 50 words, display a warning message stating “section summary may be incomplete”
+
 
 ## 3. Hallucination Prevention / Strict Evidence Mode
 - **Rule:** Disallow any content not present in the source text.  
@@ -44,6 +44,7 @@
     *“The source text does not provide enough detail to summarize this section in strict evidence mode.”*  
 - **Scan:** Compare each summary’s claims against its corresponding text span.  
 - Reject external or speculative facts.
+- If (evidence_mode = "strict", then only include text, equations, and results that explicitly appear in the provided paper.
 
 ## 4. Context Window Management
 - **Chunking:** Process sections iteratively to avoid cross-section contamination.  
